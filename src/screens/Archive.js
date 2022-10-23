@@ -40,7 +40,7 @@ const Archive = () => {
         {
             uderlyingsData.map( (item) => {
                 return (
-                <p key={item.token}>
+                <p key={item.token} __token={item.token}>
                     { item.symbol } : <span>678</span>&nbsp;&nbsp;
                     <Link to={`/item/${item.token}`}>
                         <button type="button">Show Derivatives</button>

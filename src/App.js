@@ -10,7 +10,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route index path="/" element={<Archive/>} />
-          <Route path="item/:id" element={<Single/>} />
+          <Route path="item/:token" element={<Single/>} />
           <Route path="*" element={ <Navigate to="/" replace />} />
         </Routes>
       </Router>
