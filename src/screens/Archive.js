@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Archive = () => {
@@ -7,7 +8,6 @@ const Archive = () => {
     const xhrRunner = useRef( false );
 
     useEffect(() => {
-        console.log('in')
 
         if ( xhrRunner.current ) {
             return;
@@ -32,21 +32,25 @@ const Archive = () => {
 
         fetchData();
 
-        console.log('done')
-
     }, [])
 
     return (
         <>
+        <center>
         {
             uderlyingsData.map( (item) => {
                 return (
                 <p key={item.token}>
-                    { item.symbol }
+                    { item.symbol } : <span>678</span>&nbsp;&nbsp;
+                    <Link to={`/item/${item.token}`}>
+                        <button type="button">Show Derivatives</button>
+                    </Link>
                 </p>
                 )
             })
         }
+        </center>
+
         </>
     )
 };

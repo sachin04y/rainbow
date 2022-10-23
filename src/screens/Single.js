@@ -1,8 +1,15 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
 
 const Single = () => {
-    return <h1>Single</h1>
+
+    const [ derivativeData, setDerivativeData ] = useState(0);
+    return (
+        <>
+        <center>
+            <h1>Single</h1>
+        </center>
+        </>
+    )
 };
 
 export default Single;

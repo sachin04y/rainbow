@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Archive from './screens/Archive';
 import Single from './screens/Single';
 
@@ -7,18 +7,13 @@ export default function App() {
 
   return (
     <>
-    <center>
-      <h1>Heading</h1>
       <Router>
-        <Switch>
-          <Route exact path="/" component={Archive} />
-          <Route path="/item/:id" component={Single} />
-          {/* <Route path="*">
-            <Redirect to="/" />
-          </Route> */}
-        </Switch>
+        <Routes>
+          <Route index path="/" element={<Archive/>} />
+          <Route path="item/:id" element={<Single/>} />
+          <Route path="*" element={ <Navigate to="/" replace />} />
+        </Routes>
       </Router>
-    </center>
     </>
   );
 };
