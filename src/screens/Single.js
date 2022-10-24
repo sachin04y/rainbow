@@ -22,8 +22,6 @@ const Single = () => {
                     data: { payload : response }
                 } = await axios.get(`https://prototype.sbulltech.com/api/derivatives/${params.token}`);
 
-                // console.log(response)
-
                 setDerivativeData(response);
 
             } catch (e) {
