@@ -1,7 +1,7 @@
 
-export const subscribeAction = payload => {
+export const addItemsAction = payload => {
     return {
-        type: 'SUBSCRIBE',
+        type: 'ADD_ITEMS',
         payload : payload,
     }
 }

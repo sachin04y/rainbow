@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import { subscribeToItems } from './subscribeToItems';
-
+import { livePriceOfItems } from './livePriceOfItems';
+import { addItemsToStore } from './addItemsToStore';
 
 const rootReducer = combineReducers({
-    subscribeToItems,
+    addItemsToStore,
+    livePriceOfItems,
 });
 
 export default rootReducer;

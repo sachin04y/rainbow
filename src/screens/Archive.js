@@ -2,14 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { subscribeAction } from '../actions/index'
+import { addItemsAction } from '../actions/index'
 
 const Archive = () => {
 
     const [uderlyingsData, setUnderlyingsData] = useState([]);
     
+    const livePrices = useSelector( state => state.livePriceOfItems );
+
     const dispatch = useDispatch();
-    const livePrices = useSelector( state => state.subscribeToItems );
+
     const xhrRunner = useRef( false );
 
     useEffect(() => {
@@ -28,7 +30,7 @@ const Archive = () => {
 
                 setUnderlyingsData(response);
 
-                dispatch( subscribeAction(response) );
+                dispatch( addItemsAction(response) );
 
             } catch (e) {
                 console.error(e.message);
@@ -46,7 +48,7 @@ const Archive = () => {
             uderlyingsData.map( (item) => {
                 return (
                 <p key={item.token} __token={item.token}>
-                    { item.symbol } : <span className="price">{ livePrices[item.token] ? livePrices[item.token] : '' }</span>&nbsp;&nbsp;
+                    { item.symbol } : <span className="price">{ livePrices[item.token] ? (livePrices[item.token]).price : '' }</span>&nbsp;&nbsp;
                     <Link to={`/item/${item.token}`}>
                         <button type="button">Show Derivatives</button>
                     </Link>
@@ -55,7 +57,6 @@ const Archive = () => {
             })
         }
         </center>
-
         </>
     )
 };

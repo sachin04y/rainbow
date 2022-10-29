@@ -1,52 +1,70 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { subscribeAction, livePricesAction } from '../actions/index'
+import { addItemsAction, livePricesAction } from '../actions/index'
+
+
+function usePrevious(value) {
+	const ref = useRef();
+	useEffect(() => {
+		ref.current = value;
+	});
+	return ref.current;
+}
 
 export const SocketManager = (props) => {
 
-	const livePrices = useSelector( state => state.subscribeToItems );
-
-	const [connStatus, setConnStatus] = useState( false );
-	const { children } = props;
+	const items = useSelector( state => state.addItemsToStore );
+	const previousItems = usePrevious( items );
+	const [isConnected, setIsConnected] = useState(false);
+	const ws = useRef(null);
 	const dispatch = useDispatch();
-	let socket = useRef(  new WebSocket("wss://prototype.sbulltech.com/api/ws") );
-
-	if ( connStatus ) {
-	
-		const msg = {
-			"msg_command":"subscribe",
-			"data_type":"quote",
-			"tokens": ( Object.keys( livePrices ) ).map( Number )
-		};
-		
-		socket.current.send(JSON.stringify(msg));
-		
-		socket.current.onmessage = (event) => {
-
-			let response = JSON.parse( event.data);
-			if ( 'quote' === response.data_type ) {
-				dispatch( {
-					type: 'LIVE_PRICE',
-					payload : response,
-				} );
-			}
-		}
-	}
+	const { children } = props;
 
 
 	useEffect( () => {
 
-		socket.current.onopen = (event) => {
-			setConnStatus(true)
+		const wsCurrent = new WebSocket("wss://prototype.sbulltech.com/api/ws");
+		wsCurrent.onopen = (event) => {
+			setIsConnected(true);
+			ws.current = wsCurrent;
+		
 		};
 
-		let __cleanSocket = socket.current;
+		wsCurrent.onclose = () => console.log("ws closed");
 
-		// return () => {
-		// 	__cleanSocket !== null && __cleanSocket.close()
-		// };
+		wsCurrent.onmessage = (event) => {
+			let response = JSON.parse( event.data);
+			if ( 'quote' === response.data_type ) {
+				dispatch( livePricesAction(response) );
+			}
+		}
 
 	}, [] )
+
+	useEffect( () => {
+
+		if( ! isConnected ) return;
+		let msg = {}
+		console.log(previousItems)
+		msg = {
+			"msg_command":'unsubscribe',
+			"data_type":"quote",
+			"tokens": previousItems
+		};
+		ws.current.send(JSON.stringify(msg));
+
+		msg = {
+			"msg_command":'subscribe',
+			"data_type":"quote",
+			"tokens": items
+		};
+		ws.current.send(JSON.stringify(msg));
+
+		return () => {
+			console.log('unmount');
+		}
+
+	}, [isConnected,items])
 
 	return (
 		<>
