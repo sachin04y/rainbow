@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_gatsby_site=self.webpackChunkmy_gatsby_site||[]).push([[602],{1519:function(e,t,a){a.r(t),a.d(t,{default:function(){return s}});var n=a(7294),u="pageB-module--heading--e5fa9";function s(){return n.createElement(n.Fragment,null,n.createElement("h1",{className:u},"Page B heading B NEW TESTING"))}}}]);
+//# sourceMappingURL=component---src-pages-pageb-js-0d417d038c4761920535.js.map
