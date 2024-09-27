@@ -1,0 +1,92 @@
+import React from 'react';
+import axios from 'axios';
+
+const IndexPage = () => {
+	const fileChangedHandler = async (imgs) => {
+		const heic2any = require('heic2any');
+		const data = imgs.target.files;
+		const token =
+			'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7ImlkIjoiNTgiLCJmaXJzdG5hbWUiOiJUYXlsb3IiLCJndWlkZWlkIjoxMTQsImd1aWRlbmFtZSI6IlRheWxvciBMb3JkIiwibGFzdG5hbWUiOiJMb3JkIiwiZW1haWwiOiJ0YXlsb3IubG9yZEBndWlkZXNseS5jb20iLCJwaG9uZSI6IjgxODMwOTYwMDIiLCJndWlkIjoiMzY2MDU3M2ItMjgzZS00NGEyLWI3MjAtNzRjMmFlZWUxZDBkIiwiY29nbml0b19pZCI6IjA2MmU1NTMxLTg3OTktNGVjZC05MTM1LTZjOGY0ZjMzNzkyZSIsImNhbGVuZGFyX3ZpZXciOiJhZ2VuZGEiLCJic19jYWxlbmRhcl92aWV3IjoibW9udGgiLCJzaWdudXBfY2hvaWNlIjoxLCJpc19ndWlkZV9hZG1pbiI6ZmFsc2UsImlzY29uc3VtZXIiOnRydWUsImlzZ3VpZGUiOnRydWUsImFwcHJvdmVkIjp0cnVlLCJzdWJtaXR0ZWQiOnRydWUsIm1hcmxpbl9ndWlkZSI6dHJ1ZSwiaXNfbXQiOnRydWUsImNvbXBhbnkiOiJCYXJyb24gT3V0Zml0dGVycywgRmlzaGluZywgSHVudGluZyBhbmQgV2luZSBUb3VycyJ9LCJpYXQiOjE3Mjc0MTIzMjIsImV4cCI6MTc0Mjk2NDMyMiwiYXVkIjoiZ3VpZGVzbHkuY29tIiwiaXNzIjoiYXV0aC5ndWlkZXNseS5jb20iLCJzdWIiOiJndWlkZXNseSJ9.E59zL2tbuGHoPyexN96y17UjsYseRocCuDBKzNsTueKThnyDkbonfjeoE-23Hb_vNJW-z6-bqZhErZq8e3aEYvQe7cpQi05BxzhnvySKTbHz37Bz946ZoXWC-wehKPLvPTV2oMgZmGkFVIvi29LioeNcbLfoqu_ubRnxHG_so4M';
+		let temp = [];
+		for (let item of data) {
+			if (
+				item.type === 'image/heic' ||
+				item.type === 'image/heif' ||
+				item.name.includes('.heic') ||
+				item.name.includes('.heif')
+			) {
+				let fileName = item.name.split('.')[0];
+				await heic2any({
+					blob: item,
+					toType: 'image/jpeg',
+					quality: 0.7,
+				}).then(
+					async (blob) => {
+						let newFileImg = new File([blob], `${fileName}.jpg`, {
+							type: 'image/jpeg',
+						});
+						const FileName = newFileImg.name.replace(
+							/[^\w\.\-]/gi,
+							''
+						);
+						const otherDocs = {
+							mime: 'image/jpeg',
+							uri: FileName,
+						};
+						temp.push(otherDocs);
+					},
+					(error) => {}
+				);
+			} else {
+				const FileName = item.name.replace(/[^\w\.\-]/gi, '');
+				const otherDocs = {
+					mime: 'image/jpeg',
+					uri: FileName,
+				};
+				temp.push(otherDocs);
+			}
+		}
+		let otherDocs = {
+			images: temp,
+			trip_uuid: '8bd565f2-5e90-4aee-99f6-4e71a872f67b',
+		};
+		axios
+			.post(
+				`https://lqf5gbhpny3x2bb3rovip3wt2u0hlbzz.lambda-url.us-east-2.on.aws/`,
+				otherDocs,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+			.then((response) => {
+				console.log(response.data);
+			})
+			.catch((err) => {
+				if (err.response) {
+					if (err.response.status === 401) {
+						window.localStorage.clear();
+					}
+				}
+			});
+	};
+	return (
+		<div className='Journal'>
+			<body>
+				<div>
+					<input
+						type='file'
+						name='file'
+						id='journalSummaryGallery'
+						multiple
+						onChange={(e) => fileChangedHandler(e)}
+						className='addpicinput'
+					/>
+				</div>
+			</body>
+		</div>
+	);
+};
+
+export default IndexPage;
