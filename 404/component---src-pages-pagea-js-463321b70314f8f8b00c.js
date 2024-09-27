@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkmy_gatsby_site=self.webpackChunkmy_gatsby_site||[]).push([[953],{7757:function(e,t,n){n.r(t),n.d(t,{default:function(){return l}});var a=n(7294);function l(){return a.createElement(a.Fragment,null,a.createElement("h1",{className:"heading",style:{color:"blueviolet",fontSize:"5rem"}},"Page A heading SERVICE WORKER TEST"))}}}]);
-//# sourceMappingURL=component---src-pages-pagea-js-463321b70314f8f8b00c.js.map
