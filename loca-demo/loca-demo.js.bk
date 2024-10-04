@@ -52,7 +52,7 @@ const IndexPage = () => {
 		};
 		axios
 			.post(
-				`https://lqf5gbhpny3x2bb3rovip3wt2u0hlbzz.lambda-url.us-east-2.on.aws/`,
+				`https://api.ml.guidesly.com/api/v1/report/media/upload/`,
 				otherDocs,
 				{
 					headers: {
